@@ -42,7 +42,6 @@ ENV CURSOR_LISTEN_ADDR=0.0.0.0:3000 \
     CURSOR_CONSOLE_DIR=/app/console \
     RUST_LOG=cursor_server=info
 
-USER cursor-byok
 EXPOSE 3000
 VOLUME ["/data"]
 HEALTHCHECK --interval=10s --timeout=3s --retries=5 \
