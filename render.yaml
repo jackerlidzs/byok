@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: cursor-byok
+    runtime: docker
+    repo: https://github.com/jackerlidzs/byok   # fork của bạn
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: singapore
+    plan: starter
+    healthCheckPath: /__byok-api__/healthz
+
+    # Tự deploy mỗi khi có commit mới lên branch main
+    autoDeployTrigger: commit    # commit | checksPass | off
+
+    # Chỉ build lại khi các file này thay đổi (bỏ qua thay đổi README, images...)
+    buildFilter:
+      paths:
+        - Dockerfile
+        - Cargo.toml
+        - Cargo.lock
+        - server/**
+        - protocols/**
+        - apps/desktop/**
+        - render.yaml
+      ignoredPaths:
+        - "**/*.md"
+        - images/**
+        - .github/**
+
+    envVars:
+      - key: CURSOR_LISTEN_ADDR
+        value: 0.0.0.0:10000
+      - key: CURSOR_DATABASE_URL
+        value: sqlite:///data/cursor-server.db
+      - key: CURSOR_CONSOLE_DIR
+        value: /app/console
+      - key: RUST_LOG
+        value: cursor_server=info
+    disk:
+      name: cursor-byok-data
+      mountPath: /data
+      sizeGB: 1
