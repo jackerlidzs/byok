@@ -4,10 +4,7 @@ FROM node:22-bookworm-slim AS web
 WORKDIR /src/apps/desktop
 COPY apps/desktop/package.json apps/desktop/package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci
-COPY apps/desktop/index.html apps/desktop/tsconfig.json apps/desktop/tsconfig.node.json apps/desktop/vite.config.ts ./
-COPY apps/desktop/plugins/ plugins/
-COPY apps/desktop/public/ public/
-COPY apps/desktop/src/ src/
+COPY apps/desktop/ ./
 RUN npm run build
 
 FROM rust:1-bookworm AS server
